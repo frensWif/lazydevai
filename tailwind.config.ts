@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -81,6 +80,20 @@ export default {
           900: '#4c1d95',
           950: '#2e1065',
         },
+        // Neon green palette
+        neon: {
+          green: '#39FF14',
+          green50: 'rgba(57, 255, 20, 0.05)',
+          green100: 'rgba(57, 255, 20, 0.1)',
+          green200: 'rgba(57, 255, 20, 0.2)',
+          green300: 'rgba(57, 255, 20, 0.3)',
+          green400: 'rgba(57, 255, 20, 0.4)',
+          green500: 'rgba(57, 255, 20, 0.5)',
+          green600: 'rgba(57, 255, 20, 0.6)',
+          green700: 'rgba(57, 255, 20, 0.7)',
+          green800: 'rgba(57, 255, 20, 0.8)',
+          green900: 'rgba(57, 255, 20, 0.9)',
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',

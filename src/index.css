@@ -44,6 +44,10 @@
     --sidebar-accent-foreground: 260 30% 30%;
     --sidebar-border: 260 30% 90%;
     --sidebar-ring: 260 70% 50%;
+    
+    /* Neon green accents */
+    --neon-green: 111 100% 54%;
+    --neon-green-glow: 0 0 10px rgba(57, 255, 20, 0.7), 0 0 20px rgba(57, 255, 20, 0.4);
   }
 
   .dark {
@@ -84,6 +88,10 @@
     --sidebar-accent-foreground: 260 10% 90%;
     --sidebar-border: 260 15% 20%;
     --sidebar-ring: 260 70% 55%;
+    
+    /* Neon green accents */
+    --neon-green: 111 100% 54%;
+    --neon-green-glow: 0 0 10px rgba(57, 255, 20, 0.7), 0 0 20px rgba(57, 255, 20, 0.4);
   }
 }
 
@@ -131,5 +139,24 @@
   
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/50;
+  }
+  
+  /* Neon green hover effect for cards */
+  .neon-card-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .neon-card-hover:hover {
+    @apply border-neon-green/50;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  }
+  
+  /* Neon green subtle accents */
+  .neon-accent {
+    @apply border-l-4 border-neon-green;
+  }
+  
+  .neon-button {
+    @apply bg-transparent hover:bg-neon-green/10 border border-neon-green/50 hover:border-neon-green text-foreground transition-all;
   }
 }

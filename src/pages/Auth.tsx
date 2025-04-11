@@ -8,33 +8,30 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Chrome } from "lucide-react"; 
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AuthenticationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if user is already logged in
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        navigate('/');
-      }
-    };
-    
-    checkSession();
-  }, [navigate]);
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -43,18 +40,10 @@ export default function AuthenticationPage() {
         throw error;
       }
       
-      toast({
-        title: "Success!",
-        description: "You have been signed in.",
-      });
-      
+      toast.success("Successfully signed in!");
       navigate('/');
     } catch (error: any) {
-      toast({
-        title: "Error signing in",
-        description: error.message || "Something went wrong",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Error signing in");
     } finally {
       setIsLoading(false);
     }
@@ -64,18 +53,14 @@ export default function AuthenticationPage() {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast({
-        title: "Passwords don't match",
-        description: "Please make sure your passwords match.",
-        variant: "destructive",
-      });
+      toast.error("Passwords don't match");
       return;
     }
     
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -84,16 +69,9 @@ export default function AuthenticationPage() {
         throw error;
       }
       
-      toast({
-        title: "Success!",
-        description: "Your account has been created. Please check your email for verification.",
-      });
+      toast.success("Account created! Please check your email for verification.");
     } catch (error: any) {
-      toast({
-        title: "Error signing up",
-        description: error.message || "Something went wrong",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Error signing up");
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +81,7 @@ export default function AuthenticationPage() {
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`
@@ -113,24 +91,18 @@ export default function AuthenticationPage() {
       if (error) {
         throw error;
       }
-      
-      // The user will be redirected to Google for authentication
     } catch (error: any) {
-      toast({
-        title: "Google Sign-in Error",
-        description: error.message || "Failed to sign in with Google",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Error signing in with Google");
       setIsLoading(false);
     }
   };
 
   return (
     <div className="container relative flex-1 flex items-center justify-center py-12 md:py-24">
-      <div className="absolute inset-0 z-[-1] bg-[url('/placeholder.svg')] bg-cover bg-center opacity-5"></div>
+      <div className="absolute inset-0 z-[-1] opacity-5 bg-[url('/placeholder.svg')] bg-cover bg-center"></div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Welcome</CardTitle>
           <CardDescription className="text-center">
             Sign in to your account to continue
           </CardDescription>
@@ -160,7 +132,7 @@ export default function AuthenticationPage() {
                     <Label htmlFor="password">Password</Label>
                     <Link
                       to="#"
-                      className="text-sm underline text-muted-foreground hover:text-primary"
+                      className="text-sm underline text-muted-foreground hover:text-neon-green"
                     >
                       Forgot password?
                     </Link>
@@ -173,7 +145,7 @@ export default function AuthenticationPage() {
                     required
                   />
                 </div>
-                <Button className="w-full" type="submit" disabled={isLoading}>
+                <Button className="w-full hover:bg-neon-green/90" type="submit" disabled={isLoading}>
                   {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
@@ -212,7 +184,7 @@ export default function AuthenticationPage() {
                     required
                   />
                 </div>
-                <Button className="w-full" type="submit" disabled={isLoading}>
+                <Button className="w-full hover:bg-neon-green/90" type="submit" disabled={isLoading}>
                   {isLoading ? "Creating account..." : "Sign Up"}
                 </Button>
               </form>
@@ -221,7 +193,7 @@ export default function AuthenticationPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t"></span>
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
@@ -234,24 +206,21 @@ export default function AuthenticationPage() {
             variant="outline"
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full"
+            className="w-full neon-button"
           >
             <Chrome className="mr-2 h-4 w-4" />
             Google
           </Button>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="text-center text-sm text-muted-foreground">
-            By continuing, you agree to our{" "}
-            <Link to="#" className="underline underline-offset-4 hover:text-primary">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link to="#" className="underline underline-offset-4 hover:text-primary">
-              Privacy Policy
-            </Link>
-            .
-          </div>
+        <CardFooter className="text-center text-sm text-muted-foreground">
+          By continuing, you agree to our{" "}
+          <Link to="#" className="underline underline-offset-4 hover:text-neon-green">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link to="#" className="underline underline-offset-4 hover:text-neon-green">
+            Privacy Policy
+          </Link>
         </CardFooter>
       </Card>
     </div>

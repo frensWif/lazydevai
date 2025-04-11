@@ -31,7 +31,7 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:hidden">
           <SidebarTrigger />
           <Link to="/" className="flex items-center gap-2">
-            <Code className="h-6 w-6 text-primary" />
+            <Code className="h-6 w-6 text-neon-green" />
             <span className="font-bold text-xl">LazyDevAI</span>
           </Link>
         </div>
@@ -44,7 +44,7 @@ export function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-full">
+                <Button variant="outline" size="icon" className="rounded-full border-neon-green/30 hover:border-neon-green/60">
                   <User className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -54,14 +54,14 @@ export function Navbar() {
                 <DropdownMenuItem asChild>
                   <Link to="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="default">
+            <Button asChild variant="default" className="hover:bg-neon-green/90">
               <Link to="/auth">Sign In</Link>
             </Button>
           )}
@@ -75,14 +75,14 @@ export function Navbar() {
             <Link 
               to="/" 
               onClick={() => setIsOpen(false)}
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="text-sm font-medium transition-colors hover:text-neon-green"
             >
               Home
             </Link>
             <Link 
               to="/marketplace" 
               onClick={() => setIsOpen(false)}
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="text-sm font-medium transition-colors hover:text-neon-green"
             >
               Marketplace
             </Link>
@@ -90,7 +90,7 @@ export function Navbar() {
               <Link 
                 to="/dashboard" 
                 onClick={() => setIsOpen(false)}
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className="text-sm font-medium transition-colors hover:text-neon-green"
               >
                 Dashboard
               </Link>

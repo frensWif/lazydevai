@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Input } from "@/components/ui/input";
@@ -116,8 +115,6 @@ export default function Marketplace() {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-      
       <main className="flex-grow py-8 px-4">
         <div className="container">
           <div className="text-center max-w-2xl mx-auto mb-12">
@@ -133,7 +130,7 @@ export default function Marketplace() {
                 <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
                 <Input 
                   placeholder="Search projects..." 
-                  className="pl-9"
+                  className="pl-9 focus-visible:ring-neon-green/50"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -141,7 +138,7 @@ export default function Marketplace() {
               
               <div className="flex gap-2">
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className="min-w-[160px]">
+                  <SelectTrigger className="min-w-[160px] focus:ring-neon-green/50">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -155,7 +152,7 @@ export default function Marketplace() {
                 </Select>
                 
                 <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as "popular" | "recent")}>
-                  <SelectTrigger className="min-w-[120px]">
+                  <SelectTrigger className="min-w-[120px] focus:ring-neon-green/50">
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
                   <SelectContent>
@@ -164,7 +161,7 @@ export default function Marketplace() {
                   </SelectContent>
                 </Select>
                 
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="hover:bg-neon-green/10 hover:border-neon-green">
                   <Sliders className="h-4 w-4" />
                 </Button>
               </div>
@@ -189,7 +186,7 @@ export default function Marketplace() {
                   forks={project.forks}
                   branches={project.branches}
                   lastUpdated={project.lastUpdated}
-                  className="cursor-pointer hover:border-primary/50"
+                  className="cursor-pointer"
                 />
               ))}
             </div>
