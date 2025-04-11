@@ -20,8 +20,8 @@ export default function Index() {
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-3xl">
-              LazyDevAI is the all-in-one platform for developers to build, collaborate, 
-              and ship code faster with AI assistance.
+              Lazydevai is the all-in-one platform for developers to build, collaborate, 
+              and ship code faster with intelligent development engine.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
