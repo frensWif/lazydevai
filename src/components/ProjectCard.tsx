@@ -26,7 +26,7 @@ export function ProjectCard({
   className 
 }: ProjectCardProps) {
   return (
-    <Card className={cn("transition-all duration-300 hover:shadow-md neon-card-hover", className)}>
+    <Card className={cn("transition-all duration-300 hover:shadow-md hover:border-neon-green/50 hover:shadow-neon-green/10", className)}>
       <CardHeader className="pb-3">
         <CardTitle className="text-xl font-semibold text-primary">{title}</CardTitle>
         <CardDescription className="line-clamp-2 h-10">{description}</CardDescription>
