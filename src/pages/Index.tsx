@@ -2,9 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/layout/Footer";
-import { Code, Cpu, GitBranch, Github, Users } from "lucide-react";
+import { Code, Cpu, GitBranch, Github, Users, ArrowRight } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Index() {
+  const { user } = useAuth();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section - Removed duplicate Navbar since it's already in App.tsx */}
@@ -25,8 +28,11 @@ export default function Index() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-              <Button asChild size="lg" className="w-full neon-button">
-                <Link to="/auth">Get Started</Link>
+              <Button asChild size="lg" className="w-full neon-button group">
+                <Link to={user ? "/dashboard" : "/auth"}>
+                  {user ? "Go to Dashboard" : "Get Started"} 
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="w-full">
                 <Link to="/marketplace">Explore Projects</Link>
@@ -98,8 +104,11 @@ export default function Index() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
               Join thousands of developers already using LazyDevAI to build faster and more efficiently.
             </p>
-            <Button asChild size="lg" className="neon-button">
-              <Link to="/auth">Sign Up for Free</Link>
+            <Button asChild size="lg" className="neon-button group">
+              <Link to={user ? "/dashboard" : "/auth"}>
+                {user ? "Go to Dashboard" : "Sign Up for Free"}
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </Button>
           </div>
         </div>

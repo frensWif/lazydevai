@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import EmailSignInForm from "@/components/auth/EmailSignInForm";
 import EmailSignUpForm from "@/components/auth/EmailSignUpForm";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import BackNavigation from "@/components/auth/BackNavigation";
 
 export default function AuthenticationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,6 +37,7 @@ export default function AuthenticationPage() {
 
   return (
     <div className="container relative flex-1 flex items-center justify-center py-12 md:py-24">
+      <BackNavigation />
       <div className="absolute inset-0 z-[-1] opacity-5 bg-[url('/placeholder.svg')] bg-cover bg-center"></div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">

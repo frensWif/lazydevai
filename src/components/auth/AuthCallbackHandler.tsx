@@ -17,6 +17,7 @@ export default function AuthCallbackHandler({ setError }: AuthCallbackHandlerPro
       // Check if this is a wallet auth callback with a special parameter
       const params = new URLSearchParams(location.search);
       const walletAuth = params.get('wallet');
+      const redirectTo = params.get('redirectTo') || '/dashboard'; // Default to dashboard for better UX
       
       if (walletAuth) {
         try {
@@ -28,8 +29,7 @@ export default function AuthCallbackHandler({ setError }: AuthCallbackHandlerPro
           
           if (data?.session) {
             toast.success("Successfully signed in with Phantom wallet");
-            // Use the redirect parameter if provided, otherwise go to home
-            const redirectTo = params.get('redirectTo') || '/';
+            // Navigate to the dashboard or specified redirect
             navigate(redirectTo);
           } else {
             throw new Error("No session found after wallet authentication");
@@ -53,7 +53,7 @@ export default function AuthCallbackHandler({ setError }: AuthCallbackHandlerPro
 
         if (data?.session) {
           toast.success("Successfully signed in");
-          navigate("/");
+          navigate("/dashboard"); // Take users directly to dashboard for better UX
         } else {
           navigate("/auth");
         }
