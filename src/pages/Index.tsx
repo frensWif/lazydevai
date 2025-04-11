@@ -16,7 +16,7 @@ export default function Index() {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
-              The<span className="text-primary">Lazy</span>Developer Platform
+              The <span className="text-primary">Lazy</span> Developer Platform
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-3xl">
@@ -51,7 +51,7 @@ export default function Index() {
               <div className="p-2 rounded-full bg-primary/10 text-primary w-fit mb-4">
                 <Github className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">GitHub-like Interface</h3>
+              <h3 className="text-xl font-semibold mb-2">familiar Interface</h3>
               <p className="text-muted-foreground">
                 Familiar version control features with repositories, branches, and commits.
               </p>
