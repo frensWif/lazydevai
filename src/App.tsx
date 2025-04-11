@@ -10,6 +10,7 @@ import { useState } from "react";
 
 import { LeftSidebar } from "./components/layout/LeftSidebar";
 import { Navbar } from "./components/layout/Navbar";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
@@ -46,8 +47,16 @@ const App = () => {
                       <Route path="/auth" element={<Auth />} />
                       <Route path="/auth/callback" element={<AuthCallback />} />
                       <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/marketplace" element={<Marketplace />} />
-                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/marketplace" element={
+                        <ProtectedRoute>
+                          <Marketplace />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/settings" element={
+                        <ProtectedRoute>
+                          <Settings />
+                        </ProtectedRoute>
+                      } />
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                       <Route path="*" element={<NotFound />} />
                     </Routes>
