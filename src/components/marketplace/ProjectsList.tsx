@@ -1,5 +1,7 @@
 
 import { ProjectCard } from "@/components/ProjectCard";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { useState, useEffect } from "react";
 
 interface ProjectsListProps {
   projects: {
@@ -16,6 +18,23 @@ interface ProjectsListProps {
 }
 
 export function ProjectsList({ projects, isLoading }: ProjectsListProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginatedProjects, setPaginatedProjects] = useState<typeof projects>([]);
+  const projectsPerPage = 6;
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
+  
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * projectsPerPage;
+    const endIndex = startIndex + projectsPerPage;
+    setPaginatedProjects(projects.slice(startIndex, endIndex));
+  }, [currentPage, projects]);
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of the list when changing pages
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -38,20 +57,58 @@ export function ProjectsList({ projects, isLoading }: ProjectsListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {projects.map((project) => (
-        <ProjectCard
-          key={project.id}
-          title={project.title}
-          description={project.description}
-          languages={project.languages}
-          stars={project.stars}
-          forks={project.forks}
-          branches={project.branches}
-          lastUpdated={project.lastUpdated}
-          className="cursor-pointer"
-        />
-      ))}
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {paginatedProjects.map((project) => (
+          <ProjectCard
+            key={project.id}
+            title={project.title}
+            description={project.description}
+            languages={project.languages}
+            stars={project.stars}
+            forks={project.forks}
+            branches={project.branches}
+            lastUpdated={project.lastUpdated}
+            className="cursor-pointer"
+          />
+        ))}
+      </div>
+      
+      {totalPages > 1 && (
+        <Pagination className="mt-8">
+          <PaginationContent>
+            {currentPage > 1 && (
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className="cursor-pointer"
+                />
+              </PaginationItem>
+            )}
+            
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  onClick={() => handlePageChange(index + 1)}
+                  isActive={currentPage === index + 1}
+                  className="cursor-pointer"
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            
+            {currentPage < totalPages && (
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className="cursor-pointer"
+                />
+              </PaginationItem>
+            )}
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 }
