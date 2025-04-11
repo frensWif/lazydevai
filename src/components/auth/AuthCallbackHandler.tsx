@@ -17,45 +17,21 @@ export default function AuthCallbackHandler({ setError }: AuthCallbackHandlerPro
       // Check if this is a wallet auth callback with a special parameter
       const params = new URLSearchParams(location.search);
       const walletAuth = params.get('wallet');
-      const redirectTo = params.get('redirectTo') || '/dashboard'; // Default to dashboard for better UX
       
-      if (walletAuth) {
-        try {
-          // For wallet auth, we've already set up the session in the Auth page
-          // Just verify we have a session and redirect
-          const { data, error } = await supabase.auth.getSession();
-          
-          if (error) throw error;
-          
-          if (data?.session) {
-            toast.success("Successfully signed in with Phantom wallet");
-            // Navigate to the dashboard or specified redirect
-            navigate(redirectTo);
-          } else {
-            throw new Error("No session found after wallet authentication");
-          }
-          return;
-        } catch (err: any) {
-          console.error("Error during wallet callback:", err.message);
-          setError(err.message);
-          setTimeout(() => navigate("/auth"), 3000);
-          return;
-        }
-      }
-      
-      // Handle standard OAuth callbacks
       try {
+        // For both wallet auth and standard OAuth, verify we have a session
         const { data, error } = await supabase.auth.getSession();
         
-        if (error) {
-          throw error;
-        }
-
+        if (error) throw error;
+        
         if (data?.session) {
-          toast.success("Successfully signed in");
-          navigate("/dashboard"); // Take users directly to dashboard for better UX
+          const authType = walletAuth ? "with Phantom wallet" : "";
+          toast.success(`Successfully signed in ${authType}`.trim());
+          // Always navigate to dashboard for better UX
+          navigate("/dashboard");
         } else {
-          navigate("/auth");
+          // No session found - throw error
+          throw new Error("No session found after authentication");
         }
       } catch (err: any) {
         console.error("Error during auth callback:", err.message);
