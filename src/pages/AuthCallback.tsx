@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -16,9 +17,18 @@ export default function AuthCallback() {
       
       if (walletAuth) {
         try {
-          // Handle wallet-specific authentication (already processed in Auth.tsx)
-          // Just redirect to the destination or home page
-          navigate(params.get('redirectTo') || '/');
+          // For wallet auth, we've already set up the session in the Auth page
+          // Just verify we have a session and redirect
+          const { data, error } = await supabase.auth.getSession();
+          
+          if (error) throw error;
+          
+          if (data?.session) {
+            toast.success("Successfully signed in with Phantom wallet");
+            navigate(params.get('redirectTo') || '/');
+          } else {
+            throw new Error("No session found after wallet authentication");
+          }
           return;
         } catch (err: any) {
           console.error("Error during wallet callback:", err.message);
@@ -37,6 +47,7 @@ export default function AuthCallback() {
         }
 
         if (data?.session) {
+          toast.success("Successfully signed in");
           navigate("/");
         } else {
           navigate("/auth");

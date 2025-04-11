@@ -129,40 +129,37 @@ export default function AuthenticationPage() {
       
       const signedMessage = await provider.signMessage(message, 'utf8');
       
-      // Now use Supabase to sign in with the Phantom wallet
-      const { data, error } = await supabase.auth.signInWithPassword({
-        // This is a workaround since we're not using a real provider
-        // In production we would use a proper Auth Provider for Solana wallets
-        email: `${publicKey}@phantom.wallet`,
-        password: Array.from(signedMessage.signature).join(''),
+      // Call our Edge Function to authenticate with Supabase
+      const response = await fetch('https://izvtsulcazrsnwwfzkrh.supabase.co/functions/v1/wallet-auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          publicKey,
+          signature: signedMessage.signature,
+          message: new TextDecoder().decode(message)
+        })
       });
       
-      if (error) {
-        // If user doesn't exist yet, create one
-        if (error.message.includes('Email not confirmed') || error.message.includes('Invalid login credentials')) {
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: `${publicKey}@phantom.wallet`,
-            password: Array.from(signedMessage.signature).join('').slice(0, 72),
-            options: {
-              data: {
-                wallet_address: publicKey,
-                wallet_type: 'phantom',
-              }
-            }
-          });
-          
-          if (signUpError) {
-            throw signUpError;
-          }
-          
-          toast.success("Wallet account created successfully!");
-          navigate('/');
-        } else {
-          throw error;
-        }
-      } else if (data) {
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to authenticate wallet');
+      }
+      
+      const { session, redirectTo } = await response.json();
+      
+      if (session) {
+        // Set the session in Supabase client
+        await supabase.auth.setSession(session);
         toast.success("Successfully signed in with Phantom!");
-        navigate('/');
+        
+        // Redirect to callback page which will handle session setup
+        if (redirectTo) {
+          window.location.href = redirectTo;
+        } else {
+          navigate('/');
+        }
       }
     } catch (error: any) {
       console.error('Phantom authentication error:', error);
@@ -292,10 +289,10 @@ export default function AuthenticationPage() {
               variant="outline"
               onClick={handlePhantomSignIn}
               disabled={isLoading}
-              className="w-full neon-button"
+              className={`w-full ${isPhantomInstalled ? 'neon-button' : 'bg-muted'}`}
             >
               <Wallet className="mr-2 h-4 w-4" />
-              Phantom
+              {isPhantomInstalled ? 'Phantom' : 'Install Phantom'}
             </Button>
           </div>
         </CardContent>

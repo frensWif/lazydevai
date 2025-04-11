@@ -1,6 +1,8 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.1';
+import * as nacl from 'https://esm.sh/tweetnacl@1.0.3';
+import { decode as decodeBase58 } from 'https://esm.sh/bs58@5.0.0';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,28 +24,44 @@ serve(async (req) => {
     
     const { publicKey, signature, message } = await req.json();
     
-    // Here you would verify the signature with the Solana web3 libraries
-    // This is a simplified implementation for demonstration
+    if (!publicKey || !signature || !message) {
+      throw new Error('Missing required parameters: publicKey, signature, or message');
+    }
+
+    // Verify the signature
+    const messageBytes = new TextEncoder().encode(message);
+    const signatureBytes = new Uint8Array(signature.data);
+    const publicKeyBytes = decodeBase58(publicKey);
+    
+    const verified = nacl.sign.detached.verify(
+      messageBytes,
+      signatureBytes,
+      publicKeyBytes
+    );
+
+    if (!verified) {
+      throw new Error('Invalid signature');
+    }
+    
+    console.log('Signature verified successfully');
     
     // Check if user with this wallet exists
-    const { data: existingUser, error: lookupError } = await supabase
+    const { data: existingWallet, error: lookupError } = await supabase
       .from('user_wallets')
       .select('user_id')
       .eq('wallet_address', publicKey)
       .single();
     
-    if (lookupError && lookupError.code !== 'PGRST116') {
-      throw lookupError;
-    }
-    
     let userId;
     
-    // If user doesn't exist, create one
-    if (!existingUser) {
-      // Create a new user
+    // If wallet doesn't exist, create a new user and connect it
+    if (!existingWallet) {
+      console.log('Creating new user for wallet:', publicKey);
+      
+      // Create a new user with a random email (wallet-based)
       const { data: newUser, error: signUpError } = await supabase.auth.admin.createUser({
-        email: `${publicKey}@phantom.wallet`,
-        password: signature.slice(0, 72), // Limit password length
+        email: `${publicKey.substring(0, 8)}@phantom.wallet`,
+        password: crypto.randomUUID().replace(/-/g, ''),
         email_confirm: true,
         user_metadata: { wallet_address: publicKey }
       });
@@ -52,15 +70,20 @@ serve(async (req) => {
       userId = newUser.user.id;
       
       // Store wallet information
-      await supabase
+      const { error: insertError } = await supabase
         .from('user_wallets')
         .insert({
           user_id: userId,
           wallet_address: publicKey,
           wallet_type: 'phantom'
         });
+        
+      if (insertError) throw insertError;
+      
+      console.log('Created new user and wallet connection:', userId);
     } else {
-      userId = existingUser.user_id;
+      userId = existingWallet.user_id;
+      console.log('Found existing user for wallet:', userId);
     }
     
     // Sign in the user by creating a new session
@@ -71,7 +94,10 @@ serve(async (req) => {
     if (sessionError) throw sessionError;
     
     return new Response(
-      JSON.stringify({ session }),
+      JSON.stringify({ 
+        session,
+        redirectTo: '/auth/callback?wallet=true' 
+      }),
       { 
         headers: {
           ...corsHeaders,

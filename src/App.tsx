@@ -1,31 +1,30 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-import { LeftSidebar } from "./components/layout/LeftSidebar";
-import { Navbar } from "./components/layout/Navbar";
-import { ProtectedRoute } from "./components/ProtectedRoute";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import AuthCallback from "./pages/AuthCallback";
-import Dashboard from "./pages/Dashboard";
-import Marketplace from "./pages/Marketplace";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
+// Layouts
+import { AppLayout } from "@/layouts/AppLayout";
 
-const App = () => {
-  // Create a client instance that persists during component lifecycle
+// Pages
+import IndexPage from "@/pages/Index";
+import NotFoundPage from "@/pages/NotFound";
+import AuthPage from "@/pages/Auth";
+import AuthCallback from "@/pages/AuthCallback";
+import Marketplace from "@/pages/Marketplace";
+import Dashboard from "@/pages/Dashboard";
+import Settings from "@/pages/Settings";
+
+function App() {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 1,
+        staleTime: 60 * 1000, // 1 minute
+        refetchOnWindowFocus: false,
       },
     },
   }));
@@ -33,42 +32,37 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <AuthProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <LeftSidebar>
-                <div className="flex flex-col flex-1">
-                  <Navbar />
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/auth/callback" element={<AuthCallback />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/marketplace" element={
-                        <ProtectedRoute>
-                          <Marketplace />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/settings" element={
-                        <ProtectedRoute>
-                          <Settings />
-                        </ProtectedRoute>
-                      } />
-                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                </div>
-              </LeftSidebar>
-            </BrowserRouter>
-          </AuthProvider>
-        </TooltipProvider>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<AppLayout />}>
+                <Route index element={<IndexPage />} />
+                <Route path="marketplace" element={
+                  <ProtectedRoute>
+                    <Marketplace />
+                  </ProtectedRoute>
+                } />
+                <Route path="dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="settings" element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } />
+              </Route>
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Router>
+          <Toaster />
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
