@@ -15,6 +15,7 @@ import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import Dashboard from "./pages/Dashboard";
 import Marketplace from "./pages/Marketplace";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
                       <Route path="/auth/callback" element={<AuthCallback />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/marketplace" element={<Marketplace />} />
+                      <Route path="/settings" element={<Settings />} />
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                       <Route path="*" element={<NotFound />} />
                     </Routes>

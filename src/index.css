@@ -159,4 +159,9 @@
   .neon-button {
     @apply bg-transparent hover:bg-neon-green/10 border border-neon-green/50 hover:border-neon-green text-foreground transition-all;
   }
+
+  /* For sticky navbar */
+  .navbar-sticky {
+    @apply sticky top-0 z-50 bg-background/90 backdrop-blur transition-all duration-300 shadow-sm;
+  }
 }

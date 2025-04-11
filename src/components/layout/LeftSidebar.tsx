@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Home, ShoppingBag, LayoutDashboard, Settings, Users, Code } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home, ShoppingBag, LayoutDashboard, Settings, Code } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -39,7 +39,7 @@ export function LeftSidebar({ children }: { children: React.ReactNode }) {
         <Sidebar>
           <SidebarHeader>
             <div className="flex items-center gap-2 px-2">
-              <Code className="h-6 w-6 text-primary" />
+              <Code className="h-6 w-6 text-neon-green" />
               <span className="font-bold text-lg">LazyDevAI</span>
             </div>
           </SidebarHeader>
