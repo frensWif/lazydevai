@@ -16,7 +16,7 @@ export default function Index() {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
-              The Developer Platform for the <span className="text-primary">AI Age</span>
+              The<span className="text-primary">Lazy</span>Developer Platform
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-3xl">
