@@ -28,7 +28,9 @@ export default function AuthCallbackHandler({ setError }: AuthCallbackHandlerPro
           
           if (data?.session) {
             toast.success("Successfully signed in with Phantom wallet");
-            navigate(params.get('redirectTo') || '/');
+            // Use the redirect parameter if provided, otherwise go to home
+            const redirectTo = params.get('redirectTo') || '/';
+            navigate(redirectTo);
           } else {
             throw new Error("No session found after wallet authentication");
           }
