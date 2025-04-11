@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FaGoogle } from "react-icons/fa";
+import { Chrome } from "lucide-react"; // Changed from FaGoogle to Chrome from lucide-react
 
 export default function AuthenticationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -95,7 +95,7 @@ export default function AuthenticationPage() {
             disabled={isLoading}
             className="w-full"
           >
-            <FaGoogle className="mr-2 h-4 w-4" />
+            <Chrome className="mr-2 h-4 w-4" />
             Google
           </Button>
         </CardContent>
