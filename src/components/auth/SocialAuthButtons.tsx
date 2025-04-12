@@ -23,10 +23,15 @@ export default function SocialAuthButtons({
     setIsLoading(true);
     
     try {
+      console.log("Starting Google sign in...");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
         }
       });
       
@@ -34,6 +39,7 @@ export default function SocialAuthButtons({
         throw error;
       }
     } catch (error: any) {
+      console.error("Google sign in error:", error.message);
       toast.error(error.message || "Error signing in with Google");
       setIsLoading(false);
     }
@@ -47,11 +53,13 @@ export default function SocialAuthButtons({
 
     setIsLoading(true);
     try {
+      console.log("Starting Phantom sign in...");
       const provider = (window as any).phantom?.solana;
       
       // Request connection to wallet
       const resp = await provider.connect();
       const publicKey = resp.publicKey.toString();
+      console.log("Connected to wallet with public key:", publicKey);
       
       // Sign a message with Phantom to verify ownership
       const message = new TextEncoder().encode(
@@ -59,6 +67,7 @@ export default function SocialAuthButtons({
       );
       
       const signedMessage = await provider.signMessage(message, 'utf8');
+      console.log("Message signed successfully");
       
       // Call our Edge Function to authenticate with Supabase
       const response = await fetch('https://izvtsulcazrsnwwfzkrh.supabase.co/functions/v1/wallet-auth', {
@@ -78,19 +87,16 @@ export default function SocialAuthButtons({
         throw new Error(errorData.error || 'Failed to authenticate wallet');
       }
       
-      const { session, redirectTo } = await response.json();
+      const { session } = await response.json();
+      console.log("Received session from wallet-auth function:", session ? "Yes" : "No");
       
       if (session) {
         // Set the session in Supabase client
         await supabase.auth.setSession(session);
         toast.success("Successfully signed in with Phantom!");
         
-        // Redirect to callback page which will handle session setup
-        if (redirectTo) {
-          window.location.href = redirectTo;
-        } else {
-          navigate('/');
-        }
+        // Redirect directly to dashboard
+        window.location.href = '/dashboard';
       }
     } catch (error: any) {
       console.error('Phantom authentication error:', error);

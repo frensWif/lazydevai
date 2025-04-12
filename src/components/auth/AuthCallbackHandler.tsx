@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,18 +19,25 @@ export default function AuthCallbackHandler({ setError }: AuthCallbackHandlerPro
       const walletAuth = params.get('wallet');
       
       try {
+        console.log("Auth callback handler running...");
+        
         // For both wallet auth and standard OAuth, verify we have a session
         const { data, error } = await supabase.auth.getSession();
+        
+        console.log("Session check result:", { data, error });
         
         if (error) throw error;
         
         if (data?.session) {
           const authType = walletAuth ? "with Phantom wallet" : "";
           toast.success(`Successfully signed in ${authType}`.trim());
-          // Always navigate to dashboard for better UX
-          navigate("/dashboard");
+          
+          // Force redirect to dashboard
+          console.log("Redirecting to dashboard...");
+          window.location.href = '/dashboard';
         } else {
           // No session found - throw error
+          console.log("No session found after authentication");
           throw new Error("No session found after authentication");
         }
       } catch (err: any) {

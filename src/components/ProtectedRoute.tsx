@@ -13,6 +13,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("ProtectedRoute: user status", { user: !!user, isLoading });
     if (!isLoading && !user) {
       toast.error("You need to be signed in to access this page");
       navigate("/auth");
