@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/layout/Footer";
@@ -6,7 +5,7 @@ import { Code, Cpu, GitBranch, Github, Users, ArrowRight } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Index() {
-  const { user } = useAuth();
+  const { user } = useAuth();  // Access user from AuthContext
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -17,20 +16,20 @@ export default function Index() {
             <div className="p-3 rounded-full bg-primary/10 text-primary">
               <Code className="h-10 w-10" />
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
               The <span className="text-primary">Lazy</span> Developer Platform
             </h1>
-            
+
             <p className="text-xl text-muted-foreground max-w-3xl">
-              Lazydevai is the all-in-one platform for developers to build, collaborate, 
+              Lazydevai is the all-in-one platform for developers to build, collaborate,
               and ship code faster with intelligent development engine.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
               <Button asChild size="lg" className="w-full neon-button group">
                 <Link to={user ? "/dashboard" : "/auth"}>
-                  {user ? "Go to Dashboard" : "Get Started"} 
+                  {user ? "Go to Dashboard" : "Get Started"}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
@@ -41,7 +40,7 @@ export default function Index() {
           </div>
         </div>
       </section>
-      
+
       {/* Features Section */}
       <section className="py-16 md:py-24 px-4 bg-muted/50">
         <div className="container max-w-6xl">
@@ -51,7 +50,7 @@ export default function Index() {
               Everything you need to build, collaborate, and deploy your projects, all in one platform.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-background p-6 rounded-lg border neon-card-hover">
               <div className="p-2 rounded-full bg-primary/10 text-primary w-fit mb-4">
@@ -62,7 +61,7 @@ export default function Index() {
                 Familiar version control features with repositories, branches, and commits.
               </p>
             </div>
-            
+
             <div className="bg-background p-6 rounded-lg border neon-card-hover">
               <div className="p-2 rounded-full bg-primary/10 text-primary w-fit mb-4">
                 <Cpu className="h-6 w-6" />
@@ -72,7 +71,7 @@ export default function Index() {
                 Smart code completions and suggestions powered by advanced AI models.
               </p>
             </div>
-            
+
             <div className="bg-background p-6 rounded-lg border neon-card-hover">
               <div className="p-2 rounded-full bg-primary/10 text-primary w-fit mb-4">
                 <Users className="h-6 w-6" />
@@ -82,7 +81,7 @@ export default function Index() {
                 Work together with your team in real-time, just like Google Docs for code.
               </p>
             </div>
-            
+
             <div className="bg-background p-6 rounded-lg border neon-card-hover">
               <div className="p-2 rounded-full bg-primary/10 text-primary w-fit mb-4">
                 <GitBranch className="h-6 w-6" />
@@ -95,7 +94,7 @@ export default function Index() {
           </div>
         </div>
       </section>
-      
+
       {/* CTA Section */}
       <section className="py-16 md:py-24 px-4">
         <div className="container max-w-5xl">
@@ -113,7 +112,7 @@ export default function Index() {
           </div>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
