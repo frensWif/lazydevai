@@ -1,10 +1,10 @@
-'use client'
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Chrome, Wallet } from "lucide-react";
-import { supabase } from "@/lib/supabase/client";
-import { toast } from "sonner";
-import { useNavigate } from "next/navigate";
+'use client';
+
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Chrome, Wallet } from 'lucide-react';
+import { supabase } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 
 interface SocialAuthButtonsProps {
   isLoading: boolean;
@@ -15,33 +15,28 @@ interface SocialAuthButtonsProps {
 export default function SocialAuthButtons({
   isLoading,
   setIsLoading,
-  isPhantomInstalled
+  isPhantomInstalled,
 }: SocialAuthButtonsProps) {
-  const navigate = useNavigate();
-
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
-
     try {
-      console.log("Starting Google sign in...");
+      console.log('Starting Google sign in...');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent'
-          }
-        }
+            prompt: 'consent',
+          },
+        },
       });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
     } catch (error: any) {
-      console.error("Google sign in error:", error.message);
-      toast.error(error.message || "Error signing in with Google");
-      setIsLoading(false);
+      console.error('Google sign in error:', error.message);
+      toast.error(error.message || 'Error signing in with Google');
+      setIsLoading(false); // Only reset on error, not on success since redirect happens
     }
   };
 
@@ -52,35 +47,36 @@ export default function SocialAuthButtons({
     }
 
     setIsLoading(true);
+
     try {
-      console.log("Starting Phantom sign in...");
       const provider = (window as any).phantom?.solana;
 
-      // Request connection to wallet
+      if (!provider?.isPhantom) {
+        throw new Error('Phantom wallet not detected.');
+      }
+
       const resp = await provider.connect();
       const publicKey = resp.publicKey.toString();
-      console.log("Connected to wallet with public key:", publicKey);
-
-      // Sign a message with Phantom to verify ownership
       const message = new TextEncoder().encode(
         `Sign this message to authenticate with LazyDevAI at ${new Date().toISOString()}`
       );
 
       const signedMessage = await provider.signMessage(message, 'utf8');
-      console.log("Message signed successfully");
 
-      // Call our Edge Function to authenticate with Supabase
-      const response = await fetch('https://izvtsulcazrsnwwfzkrh.supabase.co/functions/v1/wallet-auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          publicKey,
-          signature: signedMessage.signature,
-          message: new TextDecoder().decode(message)
-        })
-      });
+      const response = await fetch(
+        'https://izvtsulcazrsnwwfzkrh.supabase.co/functions/v1/wallet-auth',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            publicKey,
+            signature: signedMessage.signature,
+            message: new TextDecoder().decode(message),
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -88,19 +84,17 @@ export default function SocialAuthButtons({
       }
 
       const { session } = await response.json();
-      console.log("Received session from wallet-auth function:", session ? "Yes" : "No");
 
       if (session) {
-        // Set the session in Supabase client
         await supabase.auth.setSession(session);
-        toast.success("Successfully signed in with Phantom!");
-
-        // Redirect directly to dashboard
+        toast.success('Successfully signed in with Phantom!');
         window.location.href = '/dashboard';
+      } else {
+        throw new Error('No session returned from wallet-auth');
       }
     } catch (error: any) {
       console.error('Phantom authentication error:', error);
-      toast.error(error.message || "Error signing in with Phantom");
+      toast.error(error.message || 'Error signing in with Phantom');
     } finally {
       setIsLoading(false);
     }
@@ -110,7 +104,7 @@ export default function SocialAuthButtons({
     <>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t"></span>
+          <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
@@ -119,7 +113,7 @@ export default function SocialAuthButtons({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 mt-4">
         <Button
           variant="outline"
           onClick={handleGoogleSignIn}
@@ -134,7 +128,9 @@ export default function SocialAuthButtons({
           variant="outline"
           onClick={handlePhantomSignIn}
           disabled={isLoading}
-          className={`w-full ${isPhantomInstalled ? 'neon-button' : 'bg-muted'}`}
+          className={`w-full ${
+            isPhantomInstalled ? 'neon-button' : 'bg-muted text-muted-foreground'
+          }`}
         >
           <Wallet className="mr-2 h-4 w-4" />
           {isPhantomInstalled ? 'Phantom' : 'Install Phantom'}

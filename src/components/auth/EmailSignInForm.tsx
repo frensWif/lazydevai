@@ -1,11 +1,12 @@
+'use client';
 
-import React, { useState } from "react";
-import { link } from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import React from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { supabase } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 
 interface EmailSignInFormProps {
   email: string;
@@ -24,7 +25,7 @@ export default function EmailSignInForm({
   setPassword,
   isLoading,
   setIsLoading,
-  onSuccess
+  onSuccess,
 }: EmailSignInFormProps) {
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,10 +41,10 @@ export default function EmailSignInForm({
         throw error;
       }
 
-      toast.success("Successfully signed in!");
+      toast.success('Successfully signed in!');
       onSuccess();
     } catch (error: any) {
-      toast.error(error.message || "Error signing in");
+      toast.error(error.message || 'Error signing in');
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +67,7 @@ export default function EmailSignInForm({
         <div className="flex items-center justify-between">
           <Label htmlFor="password">Password</Label>
           <Link
-            to="#"
+            href="#"
             className="text-sm underline text-muted-foreground hover:text-neon-green"
           >
             Forgot password?
@@ -80,8 +81,12 @@ export default function EmailSignInForm({
           required
         />
       </div>
-      <Button className="w-full hover:bg-neon-green/90" type="submit" disabled={isLoading}>
-        {isLoading ? "Signing in..." : "Sign In"}
+      <Button
+        className="w-full hover:bg-neon-green/90"
+        type="submit"
+        disabled={isLoading}
+      >
+        {isLoading ? 'Signing in...' : 'Sign In'}
       </Button>
     </form>
   );
