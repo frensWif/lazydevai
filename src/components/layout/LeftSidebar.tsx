@@ -14,7 +14,7 @@ import {
   SidebarTrigger,
   useSidebar
 } from "@/components/ui/sidebar";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
 interface NavItem {
@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
 
 export function LeftSidebar({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -43,12 +43,12 @@ export function LeftSidebar({ children }: { children: React.ReactNode }) {
               <span className="font-bold text-lg">LazyDevAI</span>
             </div>
           </SidebarHeader>
-          
+
           <SidebarContent>
             <SidebarMenu>
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton 
+                  <SidebarMenuButton
                     asChild
                     isActive={location.pathname === item.path}
                     tooltip={item.label}
@@ -62,7 +62,7 @@ export function LeftSidebar({ children }: { children: React.ReactNode }) {
               ))}
             </SidebarMenu>
           </SidebarContent>
-          
+
           <SidebarFooter>
             <div className="flex items-center justify-between p-2">
               <ThemeToggle />
@@ -70,7 +70,7 @@ export function LeftSidebar({ children }: { children: React.ReactNode }) {
             </div>
           </SidebarFooter>
         </Sidebar>
-        
+
         {children}
       </div>
     </SidebarProvider>
@@ -79,11 +79,11 @@ export function LeftSidebar({ children }: { children: React.ReactNode }) {
 
 function CollapseTrigger() {
   const { state, toggleSidebar } = useSidebar();
-  
+
   return (
-    <Button 
-      variant="ghost" 
-      size="icon" 
+    <Button
+      variant="ghost"
+      size="icon"
       onClick={toggleSidebar}
       className="h-8 w-8 rounded-full"
     >

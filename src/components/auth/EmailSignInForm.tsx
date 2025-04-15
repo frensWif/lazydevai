@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { link } from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,17 +29,17 @@ export default function EmailSignInForm({
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      
+
       if (error) {
         throw error;
       }
-      
+
       toast.success("Successfully signed in!");
       onSuccess();
     } catch (error: any) {
@@ -53,9 +53,9 @@ export default function EmailSignInForm({
     <form onSubmit={handleEmailSignIn} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input 
-          id="email" 
-          placeholder="name@example.com" 
+        <Input
+          id="email"
+          placeholder="name@example.com"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -72,8 +72,8 @@ export default function EmailSignInForm({
             Forgot password?
           </Link>
         </div>
-        <Input 
-          id="password" 
+        <Input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
