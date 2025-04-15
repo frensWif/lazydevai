@@ -1,61 +1,50 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 
-interface EmailSignInFormProps {
-  email: string;
-  password: string;
-  setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  onSuccess: () => void;
-}
+export default function EmailSignUpForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-export default function EmailSignInForm({
-  email,
-  password,
-  setEmail,
-  setPassword,
-  isLoading,
-  setIsLoading,
-  onSuccess,
-}: EmailSignInFormProps) {
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
-      toast.success('Successfully signed in!');
-      onSuccess();
+      toast.success("Account created! Please check your email for verification.");
     } catch (error: any) {
-      toast.error(error.message || 'Error signing in');
+      toast.error(error.message || "Error signing up");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleEmailSignIn} className="space-y-4">
+    <form onSubmit={handleEmailSignUp} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="signup-email">Email</Label>
         <Input
-          id="email"
+          id="signup-email"
           placeholder="name@example.com"
           type="email"
           value={email}
@@ -64,29 +53,27 @@ export default function EmailSignInForm({
         />
       </div>
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <Link
-            href="#"
-            className="text-sm underline text-muted-foreground hover:text-neon-green"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        <Label htmlFor="signup-password">Password</Label>
         <Input
-          id="password"
+          id="signup-password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
-      <Button
-        className="w-full hover:bg-neon-green/90"
-        type="submit"
-        disabled={isLoading}
-      >
-        {isLoading ? 'Signing in...' : 'Sign In'}
+      <div className="space-y-2">
+        <Label htmlFor="confirm-password">Confirm Password</Label>
+        <Input
+          id="confirm-password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+      </div>
+      <Button className="w-full hover:bg-neon-green/90" type="submit" disabled={isLoading}>
+        {isLoading ? 'Creating account...' : 'Sign Up'}
       </Button>
     </form>
   );

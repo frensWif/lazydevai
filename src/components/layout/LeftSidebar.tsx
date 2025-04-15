@@ -1,7 +1,17 @@
+'use client';
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Home, ShoppingBag, LayoutDashboard, Settings, Code } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  ShoppingBag,
+  LayoutDashboard,
+  Settings,
+  Code
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -31,7 +41,7 @@ const navItems: NavItem[] = [
 ];
 
 export function LeftSidebar({ children }: { children: React.ReactNode }) {
-  const location = useLocation();
+  const pathname = usePathname();
 
   return (
     <SidebarProvider>
@@ -50,10 +60,10 @@ export function LeftSidebar({ children }: { children: React.ReactNode }) {
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton
                     asChild
-                    isActive={location.pathname === item.path}
+                    isActive={pathname === item.path}
                     tooltip={item.label}
                   >
-                    <Link to={item.path}>
+                    <Link href={item.path} className="flex items-center gap-2">
                       <item.icon className="h-5 w-5" />
                       <span>{item.label}</span>
                     </Link>

@@ -1,10 +1,10 @@
-'use client'
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase/client";
-import { toast } from "sonner";
+'use client';
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { supabase } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 
 interface EmailSignUpFormProps {
   email: string;
@@ -30,11 +30,13 @@ export default function EmailSignUpForm({
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Check if passwords match
     if (password !== confirmPassword) {
       toast.error("Passwords don't match");
       return;
     }
 
+    // Set loading state
     setIsLoading(true);
 
     try {
@@ -47,9 +49,9 @@ export default function EmailSignUpForm({
         throw error;
       }
 
-      toast.success("Account created! Please check your email for verification.");
+      toast.success('Account created! Please check your email for verification.');
     } catch (error: any) {
-      toast.error(error.message || "Error signing up");
+      toast.error(error.message || 'Error signing up');
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +91,7 @@ export default function EmailSignUpForm({
         />
       </div>
       <Button className="w-full hover:bg-neon-green/90" type="submit" disabled={isLoading}>
-        {isLoading ? "Creating account..." : "Sign Up"}
+        {isLoading ? 'Creating account...' : 'Sign Up'}
       </Button>
     </form>
   );

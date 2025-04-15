@@ -1,5 +1,6 @@
+'use client';
 
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Code, Github, Twitter } from "lucide-react";
 
 export function Footer() {
@@ -11,27 +12,27 @@ export function Footer() {
           <span className="font-bold">LazyDevAI</span>
           <span className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()}</span>
         </div>
-        
+
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-          <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
+          <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
             Privacy
           </Link>
-          <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground">
+          <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
             Terms
           </Link>
           <div className="flex items-center gap-4">
-            <a 
-              href="https://github.com" 
-              target="_blank" 
+            <a
+              href="https://github.com"
+              target="_blank"
               rel="noreferrer"
               className="text-muted-foreground hover:text-foreground"
             >
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </a>
-            <a 
-              href="https://twitter.com" 
-              target="_blank" 
+            <a
+              href="https://twitter.com"
+              target="_blank"
               rel="noreferrer"
               className="text-muted-foreground hover:text-foreground"
             >

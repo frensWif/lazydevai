@@ -1,5 +1,4 @@
-// src/app/auth/signin/page.tsx
-import { EmailSignInForm } from "@/components/auth/EmailSignInForm";
+import EmailSignInForm from "@/components/auth/EmailSignInForm";
 
 export default function SignInPage() {
   return (

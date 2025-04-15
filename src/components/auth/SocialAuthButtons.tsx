@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Chrome, Wallet } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import Spinner from '@/components/ui/spinner';
 
 interface SocialAuthButtonsProps {
   isLoading: boolean;
@@ -20,7 +21,6 @@ export default function SocialAuthButtons({
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      console.log('Starting Google sign in...');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -36,20 +36,21 @@ export default function SocialAuthButtons({
     } catch (error: any) {
       console.error('Google sign in error:', error.message);
       toast.error(error.message || 'Error signing in with Google');
-      setIsLoading(false); // Only reset on error, not on success since redirect happens
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handlePhantomSignIn = async () => {
     if (!isPhantomInstalled) {
+      toast.info('Redirecting to Phantom installation page...');
       window.open('https://phantom.app/', '_blank');
       return;
     }
 
     setIsLoading(true);
-
     try {
-      const provider = (window as any).phantom?.solana;
+      const provider = (window as any)?.phantom?.solana;
 
       if (!provider?.isPhantom) {
         throw new Error('Phantom wallet not detected.');
@@ -60,7 +61,6 @@ export default function SocialAuthButtons({
       const message = new TextEncoder().encode(
         `Sign this message to authenticate with LazyDevAI at ${new Date().toISOString()}`
       );
-
       const signedMessage = await provider.signMessage(message, 'utf8');
 
       const response = await fetch(
@@ -118,10 +118,19 @@ export default function SocialAuthButtons({
           variant="outline"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="w-full neon-button"
+          className="w-full"
         >
-          <Chrome className="mr-2 h-4 w-4" />
-          Google
+          {isLoading ? (
+            <>
+              <Spinner className="mr-2 h-4 w-4 animate-spin" />
+              Signing in...
+            </>
+          ) : (
+            <>
+              <Chrome className="mr-2 h-4 w-4" />
+              Google
+            </>
+          )}
         </Button>
 
         <Button
@@ -129,11 +138,20 @@ export default function SocialAuthButtons({
           onClick={handlePhantomSignIn}
           disabled={isLoading}
           className={`w-full ${
-            isPhantomInstalled ? 'neon-button' : 'bg-muted text-muted-foreground'
+            isPhantomInstalled ? '' : 'bg-muted text-muted-foreground'
           }`}
         >
-          <Wallet className="mr-2 h-4 w-4" />
-          {isPhantomInstalled ? 'Phantom' : 'Install Phantom'}
+          {isLoading ? (
+            <>
+              <Spinner className="mr-2 h-4 w-4 animate-spin" />
+              Verifying...
+            </>
+          ) : (
+            <>
+              <Wallet className="mr-2 h-4 w-4" />
+              {isPhantomInstalled ? 'Phantom' : 'Install Phantom'}
+            </>
+          )}
         </Button>
       </div>
     </>
