@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -24,7 +25,6 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     await signOut();
-    router.push("/");
   };
 
   return (
@@ -37,6 +37,36 @@ export function Navbar() {
             <Code className="h-6 w-6 text-neon-green" />
             <span className="font-bold text-xl">LazyDevAI</span>
           </Link>
+        </div>
+
+        {/* Desktop Left Side */}
+        <div className="hidden md:flex md:items-center md:gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <Code className="h-6 w-6 text-neon-green" />
+            <span className="font-bold text-xl">LazyDevAI</span>
+          </Link>
+          <nav className="ml-6 hidden md:flex items-center gap-6">
+            <Link
+              href="/"
+              className="text-sm font-medium transition-colors hover:text-neon-green"
+            >
+              Home
+            </Link>
+            <Link
+              href="/marketplace"
+              className="text-sm font-medium transition-colors hover:text-neon-green"
+            >
+              Marketplace
+            </Link>
+            {user && (
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium transition-colors hover:text-neon-green"
+              >
+                Dashboard
+              </Link>
+            )}
+          </nav>
         </div>
 
         <div className="flex-1 md:flex-none" />

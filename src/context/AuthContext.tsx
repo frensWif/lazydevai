@@ -1,10 +1,6 @@
-<<<<<<< HEAD
+
 'use client'
-=======
 
-"use client";
-
->>>>>>> 0f45ce625b3b78df86083be31fb85fa3be6477e2
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Session, User } from "@supabase/supabase-js";

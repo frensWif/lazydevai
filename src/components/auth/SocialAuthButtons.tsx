@@ -41,7 +41,6 @@ export default function SocialAuthButtons({
     } catch (error: any) {
       console.error('Google sign in error:', error.message);
       toast.error(error.message || 'Error signing in with Google');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -55,6 +54,7 @@ export default function SocialAuthButtons({
 
     setIsLoading(true);
     try {
+      console.log("Starting Phantom sign in...");
       const provider = (window as any)?.phantom?.solana;
 
       if (!provider?.isPhantom) {
@@ -63,41 +63,50 @@ export default function SocialAuthButtons({
 
       const resp = await provider.connect();
       const publicKey = resp.publicKey.toString();
+      console.log("Connected to wallet with public key:", publicKey);
+      
       const message = new TextEncoder().encode(
         `Sign this message to authenticate with LazyDevAI at ${new Date().toISOString()}`
       );
+      
       const signedMessage = await provider.signMessage(message, 'utf8');
+      console.log("Message signed successfully");
 
-      const response = await fetch(
-        'https://izvtsulcazrsnwwfzkrh.supabase.co/functions/v1/wallet-auth',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            publicKey,
-            signature: signedMessage.signature,
-            message: new TextDecoder().decode(message),
-          }),
+      try {
+        const response = await fetch(
+          'https://izvtsulcazrsnwwfzkrh.supabase.co/functions/v1/wallet-auth',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              publicKey,
+              signature: signedMessage.signature,
+              message: new TextDecoder().decode(message),
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to authenticate wallet');
         }
-      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to authenticate wallet');
-      }
+        const { session } = await response.json();
 
-      const { session } = await response.json();
-
-      if (session) {
-        await supabase.auth.setSession(session);
-        toast.success('Successfully authenticated with Phantom!');
-        
-        // Directly redirect to dashboard after successful wallet authentication
-        router.push(ROUTES.DASHBOARD);
-      } else {
-        throw new Error('No session returned from wallet-auth');
+        if (session) {
+          await supabase.auth.setSession(session);
+          toast.success('Successfully authenticated with Phantom!');
+          
+          // Directly redirect to dashboard after successful wallet authentication
+          router.push(ROUTES.DASHBOARD);
+        } else {
+          throw new Error('No session returned from wallet-auth');
+        }
+      } catch (fetchError: any) {
+        console.error("API request error:", fetchError);
+        toast.error(`Authentication failed: ${fetchError.message || 'Network error'}`);
       }
     } catch (error: any) {
       console.error('Phantom authentication error:', error);
