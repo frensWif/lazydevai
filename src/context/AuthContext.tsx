@@ -1,7 +1,11 @@
 
+"use client";
+
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface AuthContextType {
   session: Session | null;
@@ -21,9 +25,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     console.log("AuthProvider initializing...");
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
@@ -31,6 +37,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         setIsLoading(false);
+        
+        // Only show toast for sign in/out events, not initial loading
+        if (event === 'SIGNED_IN') {
+          toast.success("Successfully signed in!");
+        } else if (event === 'SIGNED_OUT') {
+          toast.info("You have been signed out");
+          router.refresh(); // Refresh to update protected routes
+        }
       }
     );
 
@@ -43,11 +57,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/'; // Force page reload after signout
+    router.push('/'); // Redirect to home after signout
   };
 
   const value = {

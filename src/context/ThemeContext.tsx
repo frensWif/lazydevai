@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, {
@@ -7,6 +8,7 @@ import React, {
   useState,
   ReactNode,
 } from 'react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -28,24 +30,37 @@ export const ThemeProvider = ({
   defaultTheme = 'system',
   storageKey = 'lazydevai-theme',
 }: ThemeProviderProps) => {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return defaultTheme;
-    return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
-  });
+  const [theme, setThemeState] = useState<Theme>(defaultTheme);
+  const [isMounted, setIsMounted] = useState(false);
+  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
 
+  // Initialize theme from localStorage or default to system
   useEffect(() => {
+    const storedTheme = localStorage.getItem(storageKey) as Theme | null;
+    if (storedTheme) {
+      setThemeState(storedTheme);
+    } else {
+      setThemeState(defaultTheme);
+    }
+    setIsMounted(true);
+  }, [defaultTheme, storageKey]);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (!isMounted) return;
+    
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
 
     const appliedTheme =
       theme === 'system'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? prefersDark
           ? 'dark'
           : 'light'
         : theme;
 
     root.classList.add(appliedTheme);
-  }, [theme]);
+  }, [theme, isMounted, prefersDark]);
 
   const setTheme = (newTheme: Theme) => {
     localStorage.setItem(storageKey, newTheme);
