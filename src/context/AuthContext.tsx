@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ROUTES } from "@/lib/constants";
 
 interface AuthContextType {
   session: Session | null;
@@ -41,8 +42,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Only show toast for sign in/out events, not initial loading
         if (event === 'SIGNED_IN') {
           toast.success("Successfully signed in!");
+          router.push(ROUTES.DASHBOARD); // Ensure redirection on sign in
         } else if (event === 'SIGNED_OUT') {
           toast.info("You have been signed out");
+          router.push(ROUTES.HOME); // Redirect to home after signout
           router.refresh(); // Refresh to update protected routes
         }
       }
@@ -61,7 +64,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/'); // Redirect to home after signout
   };
 
   const value = {
