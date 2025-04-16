@@ -1,103 +1,68 @@
-import Image from "next/image";
+
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Code } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col">
+      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                <span className="bg-gradient-to-r from-purple-500 to-neon-green bg-clip-text text-transparent">
+                  LazyDev AI
+                </span>
+              </h1>
+              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                Your intelligent co-pilot for development. Build web applications, smart contracts, and more with AI assistance.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 min-[400px]:flex-row">
+              <Button asChild className="bg-purple-600 hover:bg-purple-700">
+                <Link href="/dashboard">
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/marketplace">
+                  Explore Templates
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
+                Features
+              </h2>
+              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                Everything you need to build great applications faster.
+              </p>
+            </div>
+            
+            <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm neon-card-hover">
+                <div className="rounded-full border border-neon-green/50 p-2">
+                  <Code className="h-6 w-6 text-neon-green" />
+                </div>
+                <h3 className="text-xl font-bold">AI Code Assistance</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Get instant help with coding problems and suggestions for improvements.
+                </p>
+              </div>
+              
+              {/* More feature cards would go here */}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
