@@ -2,9 +2,10 @@
 import { Metadata } from "next";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardWelcome from "@/components/dashboard/DashboardWelcome";
+import { APP_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Dashboard - LazyDev AI",
+  title: `Dashboard - ${APP_NAME}`,
   description: "Manage your LazyDev AI projects",
 };
 
