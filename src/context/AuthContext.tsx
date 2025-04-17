@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-'use client'
-=======
+'use client';
 
-'use client'
-
->>>>>>> 19e51f0a8f343b7887c388da9c85bb2ea6c02514
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
@@ -30,7 +25,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     console.log("AuthProvider initializing...");
-    // Set up auth state listener FIRST
+
+    // Listen to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
         console.log("Auth state change:", event);
@@ -40,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    // THEN check for existing session
+    // Check for existing session on mount
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
       console.log("Found existing session:", currentSession ? "Yes" : "No");
       setSession(currentSession);
@@ -53,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/'; // Force page reload after signout
+    window.location.href = '/'; // Reload the page after sign-out
   };
 
   const value = {
