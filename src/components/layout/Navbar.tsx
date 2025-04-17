@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Menu, X, Code, LogOut, User } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuth } from "@/context/AuthContext";
 import {
   DropdownMenu,
@@ -32,7 +30,12 @@ export function Navbar() {
       <div className="container flex h-16 items-center justify-between">
         {/* Mobile Left Side */}
         <div className="flex items-center gap-2 md:hidden">
-          <SidebarTrigger />
+          <button
+            className="p-2 rounded-md"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="h-6 w-6 text-neon-green" /> : <Menu className="h-6 w-6 text-neon-green" />}
+          </button>
           <Link href="/" className="flex items-center gap-2">
             <Code className="h-6 w-6 text-neon-green" />
             <span className="font-bold text-xl">LazyDevAI</span>
