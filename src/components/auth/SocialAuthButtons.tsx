@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -7,8 +6,6 @@ import { Chrome, Wallet } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import Spinner from '@/components/ui/spinner';
-import { useRouter } from 'next/navigation';
-import { ROUTES } from '@/lib/constants';
 
 interface SocialAuthButtonsProps {
   isLoading: boolean;
@@ -21,8 +18,6 @@ export default function SocialAuthButtons({
   setIsLoading,
   isPhantomInstalled,
 }: SocialAuthButtonsProps) {
-  const router = useRouter();
-
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
@@ -92,10 +87,8 @@ export default function SocialAuthButtons({
 
       if (session) {
         await supabase.auth.setSession(session);
-        toast.success('Successfully authenticated with Phantom!');
-        
-        // Directly redirect to dashboard after successful wallet authentication
-        router.push(ROUTES.DASHBOARD);
+        toast.success('Successfully signed in with Phantom!');
+        window.location.href = '/dashboard';
       } else {
         throw new Error('No session returned from wallet-auth');
       }
