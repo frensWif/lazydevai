@@ -1,8 +1,10 @@
+
 'use client'
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { ROUTES } from '@/lib/constants';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,7 +16,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     if (!isLoading && !session) {
-      router.push('/auth/signin');
+      router.push(ROUTES.SIGN_IN);
     }
   }, [isLoading, session, router]);
 

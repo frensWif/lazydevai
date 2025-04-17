@@ -1,12 +1,18 @@
+
 'use client'
 
-import { ThemeProvider } from '@/components/theme-provider' // Make sure this path is correct
+import { ThemeProvider } from '@/components/theme-provider'
+import { AuthProvider } from '@/context/AuthContext'
+import { Toaster } from "sonner"
 import { ReactNode } from 'react'
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      {children}
+      <AuthProvider>
+        {children}
+        <Toaster />
+      </AuthProvider>
     </ThemeProvider>
   )
 }
