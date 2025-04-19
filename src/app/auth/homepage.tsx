@@ -1,12 +1,13 @@
-// app/auth/homepage.tsx
+'use client';
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/layout/Footer";
-import { useAuth } from "@/context/AuthContext";  // Assuming you have AuthContext to handle user state
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomePage() {
-  const { user } = useAuth();  // Assuming useAuth is a custom hook for user context
+  const { user } = useAuth();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -45,7 +46,6 @@ export default function HomePage() {
               Everything you need to build, collaborate, and deploy your projects, all in one platform.
             </p>
           </div>
-
           {/* Add your feature cards here */}
         </div>
       </section>
@@ -58,7 +58,6 @@ export default function HomePage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
               Join thousands of developers already using LazyDevAI to build faster and more efficiently.
             </p>
-
             <Button asChild size="lg" className="neon-button group">
               <Link href={user ? "/dashboard" : "/auth/login"}>
                 {user ? "Go to Dashboard" : "Sign Up for Free"}

@@ -1,10 +1,11 @@
-// app/auth/page.tsx (Handles both static and dynamic rendering for the /auth route)
-import HomePage from "@/auth/homepage";  // Import the HomePage component for dynamic rendering
-
+// app/page.tsx (Handles the rendering for the index page)
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import HomePage from "@/app/auth/homepage";
 export default function Page() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Static or layout content for /auth */}
+      {/* Static or layout content for the home page */}
       <section className="py-20 md:py-28 px-4">
         <div className="container max-w-5xl">
           <div className="text-center mb-12">
@@ -15,13 +16,13 @@ export default function Page() {
           </div>
 
           {/* The auth-specific content goes here */}
-          {/* For example, a Login or Signup form can go here */}
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-            {/* Assuming you have a login or sign-up component */}
+            {/* Log In Button */}
             <Button asChild size="lg" className="w-full neon-button group">
               <Link href="/auth/login">Log In</Link>
             </Button>
 
+            {/* Sign Up Button */}
             <Button asChild size="lg" variant="outline" className="w-full">
               <Link href="/auth/signup">Sign Up</Link>
             </Button>
